@@ -9,7 +9,7 @@ export class ChatHeaderWidgetElement extends HTMLElement {
   protected chatCollapseButton: HTMLElement;
 
   /**
-   * Returns attributes to be used 
+   * Returns attributes to be used
    */
   static get observedAttributes() {
     return [''];
@@ -37,12 +37,8 @@ export class ChatHeaderWidgetElement extends HTMLElement {
       applyFocusVisiblePolyfill(this.shadowRoot);
     }
 
-
-    const chatTitle = this.getAttribute("chat-title") || "Virtual Chat";
-
     const title = this.shadowRoot.querySelector("h3");
-    title.textContent = chatTitle;
-
+    title.textContent = 'DFCX Agent';
 
     // Add Listeners if there are any
     this.chatCollapseButton.addEventListener("click", (_event) => {

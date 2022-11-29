@@ -59,7 +59,7 @@ chatFrameTemplate.innerHTML = `
       <!-- TODO : REDESIGN SUGGESSTION CHIPS -->
       <section class="chat_button_container">
       <p>
-      Hello 👋🏾,<br> Nana Adwoa here, How may I help you.
+      Hello 👋🏾,<br> DFCX Agent here, How may I help you.
       </p>
 
         <button class="chat-toggle-btn" 
@@ -169,7 +169,7 @@ chatInputTemplate.innerHTML = `
 
   `;
 
-  
+
   export const chatMenuChipsTemplate = document.createElement('template');
   chatMenuChipsTemplate.innerHTML = `
 
@@ -185,7 +185,7 @@ chatInputTemplate.innerHTML = `
   </section>
   `;
 
-  
+
 export const chatMenuListTemplate = document.createElement('template');
 chatMenuListTemplate.innerHTML = `
 
@@ -220,7 +220,7 @@ chatChipsTemplate.innerHTML = `
 
   </section>
   `;
- 
+
 export const chatImageTemplate = document.createElement('template');
 chatImageTemplate.innerHTML = `
 

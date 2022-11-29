@@ -5,8 +5,7 @@
   <meta charset="utf-8" />
   <meta charset="UTF-8">
 
-  <title>COVID vaccination appointment</title>
-  <meta name="description" content="A conversational bot allowing users to book covid vaccine shots appointment at health sectors around them at their own convenience.">
+  <title>DFCX Sample Web Widget</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,12 +14,6 @@
 </head>
 
 <body>
-
-  <!-- <div class="login-logo"></div> -->
-<iframe id="video" width="560" height="315" src="https://www.youtube.com/embed/eKE-emwE_hQ?start=14" title="YouTube video player"
-  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-  allowfullscreen></iframe>
-
   <div class="themes">
     <button class="back">Background</button>
     <button class="dark-theme">Dark Theme</button>
@@ -29,11 +22,8 @@
 
   <script src="/dist/dialogflowcx-chat-widget.min.js"></script>
 
-  <dialogflowcx-chat-widget chat-title="Vaccine Appointments"
-  agent-id="4883adeb-8d80-4383-8c3f-db6308741731"  
-  agent-url="/channels/web">
-  </dialogflowcx-chat-widget>
- 
+  <dialogflowcx-chat-widget foo="bar"></dialogflowcx-chat-widget>
+
   <script>
     window.addEventListener('DOMContentLoaded', function () {
 
@@ -57,7 +47,7 @@
 
 
   <style>
-   
+
     * {
       padding: 0px;
       margin: 0px;

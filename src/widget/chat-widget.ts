@@ -18,10 +18,7 @@ import {  IntentRequest,LOCATION_REQUEST  } from '../models/IntentRequest';
  * }
  * ```
  *
- * @prop agent-url - The URL of the custom interactions api. Not null but bby defualt will use localhost
- * @prop agent-id - The dialogflow agent id. Not null but ny default uses a test agent id
- * @prop chat-title - The title of the chat component
- * @prop session-id - The unique identifier to manage sessions. This is created by default if null 
+ * @prop session-id - The unique identifier to manage sessions. This is created by default if null
 
  * @listen queryEntered - The input has a query and the enter key has pressed
  * @listens scrollToView - The view has been called to scroll down
@@ -48,11 +45,11 @@ export class ChatWidgetElement extends HTMLElement {
   protected chatViewFrame: HTMLElement;
   protected chatListFrame: HTMLElement;
   protected loadingElement: HTMLElement;
-  protected chatSuggesstionElement: HTMLElement;
+  protected chatSuggestionElement: HTMLElement;
 
 
   /**
-   * Returns attributes to be used 
+   * Returns attributes to be used
    */
   static get observedAttributes() {
 
@@ -71,14 +68,11 @@ export class ChatWidgetElement extends HTMLElement {
 
     this.toggleChatViewState = this.toggleChatViewState.bind(this);
 
-
     this.chatViewFrame = this.shadowRoot.querySelector('.chat-main-wrapper ')
     this.chatToggleButton = this.shadowRoot.querySelector('.chat-toggle-btn');
     this.chatListFrame = this.shadowRoot.querySelector('.chat-main-wrapper div');
     this.loadingElement = this.shadowRoot.querySelector('.chat-loading');
-    this.chatSuggesstionElement = this.shadowRoot.querySelector('.chat_button_container p');
-
-
+    this.chatSuggestionElement = this.shadowRoot.querySelector('.chat_button_container p');
   }
 
   connectedCallback() {
@@ -94,30 +88,14 @@ export class ChatWidgetElement extends HTMLElement {
     }
 
     // Get intent URL
-    this.intentUrl = this.getAttribute("agent-url") || "http://localhost:2000/interactions/api";
-    const agentId = this.getAttribute("agent-id") ;
-    const chatTitle = this.getAttribute("chat-title") || "Virtual Chat";
-
-    if (chatTitle) {
-      // query chat title and change to new one
-      const header = this.shadowRoot.querySelector("chat-header-widget");
-      header.setAttribute("chat-title", chatTitle);
-    }
+    this.intentUrl = '/channels/web';
+    const header = this.shadowRoot.querySelector("chat-header-widget");
+    header.setAttribute("chat-title", 'DFCX Agent');
 
     this.hideChatLoader();
 
     // create an intentRequest
-    this.intentRequest = new IntentRequest(
-      "stanbic-assistant",
-      "us-central1",
-      agentId,
-      "en",
-      this.sessionId,
-      "hello"
-    );
-
-
-
+    this.intentRequest = new IntentRequest(this.sessionId);
 
     this.chatToggleButton.addEventListener("click", this.toggleChatViewState)
 
@@ -153,76 +131,10 @@ export class ChatWidgetElement extends HTMLElement {
     // Listen to scroll to the bottom
     window.addEventListener("scrollToView", () => {
       this.scrollToView();
-
-    });
-
-    // Listen to chip selected
-    // TODO: PULL ALL EVENT NAMES INTO TYPES FOR EASY REFERNCE
-    //@ts-ignore
-    window.addEventListener("chipSelected", (event: CustomEvent) => {
-      // retrieve custom data
-      const message = event.detail.message;
-      // const id = event.detail.id;
-
-      // find the element
-
-      // create chat and append
-      const chat = new Chat(message, this.sessionId, "USER");
-      this.addChat(chat);
-
-      this.showChatLoader();
-
-      // scoll to the bottom
-      this.scrollToView()
-
-      // set the chat message to the intent request and validate
-      this.intentRequest.query = message;
-      this.intentRequest.requestType = "TEXT";
-
-      this.verifyIntents(this.intentRequest);
-    });
-
-    // Listen to chip selected
-    //@ts-ignore
-    window.addEventListener("locationSelected", (event: CustomEvent) => {
-      // retrieve custom data
-      const message = event.detail as LOCATION_REQUEST;
-      // const id = event.detail.id;
-
-      // find the element
-
-      // create chat and append
-      const chat = new Chat(message.query, this.sessionId, "USER");
-      this.addChat(chat);
-
-      this.showChatLoader();
-
-      // scoll to the bottom
-      this.scrollToView()
-
-      // set the chat message to the intent request and validate
-      
-      this.intentRequest.query = message;
-      this.intentRequest.requestType = "LOCATION";
-
-      this.verifyIntents(this.intentRequest);
-    });
-
-
-    // Listen to locationPickerError
-    //@ts-ignore
-    window.addEventListener("locationPickerError", (event: CustomEvent) => {
-      // retrieve custom data
-      const message = event.detail.message;
-
-      // create chat and append
-      const chat = new Chat(message, this.sessionId, "BOT");
-      this.addChat(chat);
-
     });
 
     // Listen for chat suggesstion chip clicked
-    this.chatSuggesstionElement.addEventListener("click", (_event) => {
+    this.chatSuggestionElement.addEventListener("click", (_event) => {
 
       // verify if the chat is closed
       if (!this.chatState && !this.chatSuggesstionDirty) {
@@ -254,9 +166,6 @@ export class ChatWidgetElement extends HTMLElement {
 
     // hide chat loader
     this.hideChatLoader();
-
-    this.hideChatFrame();
-
     this.loadInitialChat();
   }
 
@@ -280,10 +189,10 @@ export class ChatWidgetElement extends HTMLElement {
     // Show up the chat view
     this.chatViewFrame.style.display = "none";
 
-    // hide chat suggesstion chips
-    this.chatSuggesstionElement.style.display = "block";
+    // hide chat suggestion chips
+    this.chatSuggestionElement.style.display = "block";
     if (this.chatSuggesstionDirty) {
-      this.chatSuggesstionElement.textContent = "Have any questions ?"
+      this.chatSuggestionElement.textContent = "Have any questions ?"
     }
 
 
@@ -299,7 +208,7 @@ export class ChatWidgetElement extends HTMLElement {
 
 
     // hide chat suggesstion chips
-    this.chatSuggesstionElement.style.display = "none";
+    this.chatSuggestionElement.style.display = "none";
 
     // Scroll to the bottom
     this.scrollToView()
@@ -331,7 +240,7 @@ export class ChatWidgetElement extends HTMLElement {
       element.setAttribute("chat", JSON.stringify(chat))
 
       this.chatListFrame.appendChild(element);
-    } 
+    }
     else if (chat.messageType === "IMAGE") {
       const element = document.createElement("chat-image-widget");
       element.setAttribute("chat", JSON.stringify(chat))
@@ -341,9 +250,9 @@ export class ChatWidgetElement extends HTMLElement {
     else if (chat.messageType === "MENU_CHIPS") {
       const element = document.createElement("chat-menu-chips-widget");
       element.setAttribute("chat", JSON.stringify(chat))
-  
+
       this.chatListFrame.appendChild(element);
-    } 
+    }
     else if (chat.messageType === "LIST") {
       // <chat-list-widget></chat-list-widget>
       const element = document.createElement("chat-list-widget");
@@ -372,12 +281,10 @@ export class ChatWidgetElement extends HTMLElement {
 
   protected loadInitialChat() {
     // set message to hello for the first time
-    this.intentRequest.query = "hello";
     this.intentRequest.requestType = "TEXT";
 
     this.showChatLoader()
-
-    
+    this.showChatFrame();
     this.verifyIntents(this.intentRequest)
   }
 
